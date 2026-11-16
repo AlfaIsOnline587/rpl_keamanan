@@ -64,6 +64,7 @@ class Validators {
     return null;
   }
 
+  // << awal validatePhone
   /// Memvalidasi nomor telepon yang terdiri dari 10-13 digit.
   static String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
@@ -74,7 +75,9 @@ class Validators {
     }
     return null;
   }
+  // << akhir validatePhone
 
+  // << awal validateUrl
   /// Memvalidasi URL yang diawali `http://` atau `https://`.
   static String? validateUrl(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -85,7 +88,9 @@ class Validators {
     }
     return null;
   }
+  // << akhir validateUrl
 
+  // << awal validatePassword
   /// Memvalidasi password minimal 8 karakter dengan huruf besar,
   /// angka, dan simbol.
   static String? validatePassword(String? value) {
@@ -106,4 +111,5 @@ class Validators {
     }
     return null;
   }
+  // << akhir validatePassword
 }

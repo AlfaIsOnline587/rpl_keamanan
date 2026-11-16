@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/app_config.dart';
 import '../models/post.dart';
 import '../models/user.dart';
+import '../utils/logger.dart';
 
 /// Service untuk komunikasi HTTP dengan REST API.
 ///
@@ -102,9 +101,8 @@ class ApiService {
     } on FormatException {
       throw const ApiException('Format data dari server tidak valid.');
     } catch (error, stackTrace) {
-      developer.log(
+      Logger.error(
         'Unexpected API error (${error.runtimeType}).',
-        name: 'ApiService',
         stackTrace: stackTrace,
       );
       throw const ApiException(
@@ -118,17 +116,10 @@ class ApiService {
     if (AppConfig.apiKey.isNotEmpty) 'X-API-Key': AppConfig.apiKey,
   };
 
-  void _logRequest(String endpoint) {
-    if (kDebugMode) {
-      developer.log('GET /$endpoint', name: 'ApiService');
-    }
-  }
+  void _logRequest(String endpoint) => Logger.debug('GET /$endpoint');
 
-  void _logResponse(int statusCode) {
-    if (kDebugMode) {
-      developer.log('Response status: $statusCode', name: 'ApiService');
-    }
-  }
+  void _logResponse(int statusCode) =>
+      Logger.info('API response status: $statusCode');
 
   /// Menutup client HTTP jika tidak lagi digunakan.
   void dispose() {
