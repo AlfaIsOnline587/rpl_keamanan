@@ -6,15 +6,15 @@ Aplikasi Flutter sederhana untuk menampilkan daftar pengguna dari REST API.
 
 Secara default aplikasi menggunakan API demo JSONPlaceholder, sehingga dapat
 langsung menampilkan daftar pengguna tanpa API key. Untuk memakai API lain,
-atur file `.env`:
+atur konfigurasi saat menjalankan aplikasi:
 
-```env
-BASE_URL=https://example.com/api
-API_KEY=your-api-key
+```bash
+flutter run --dart-define=BASE_URL=https://example.com/api --dart-define=API_KEY=your-non-secret-key
 ```
 
-`API_KEY` opsional dan hanya dikirim jika nilainya diisi. Jangan masukkan
-credential rahasia ke repositori publik.
+`API_KEY` opsional dan hanya dikirim jika nilainya diisi. Nilai
+`--dart-define` tetap tertanam di aplikasi hasil build dan dapat diekstrak;
+jangan gunakan untuk credential rahasia. Simpan key rahasia di backend/proxy.
 
 ## Menjalankan aplikasi
 
@@ -25,7 +25,7 @@ flutter run
 
 ## Struktur `lib/`
 
-- `config/`: konfigurasi aplikasi dan environment.
+- `config/`: konfigurasi API.
 - `models/`: model serta serialisasi data.
 - `repositories/`: kontrak dan implementasi akses data.
 - `screens/`: halaman aplikasi.

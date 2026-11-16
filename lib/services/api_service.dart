@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/app_config.dart';
+import '../models/post.dart';
 import '../models/user.dart';
 
 /// Service untuk komunikasi HTTP dengan REST API.
@@ -45,6 +46,23 @@ class ApiService {
     return User.fromJson(data);
   }
 
+  // read only - awal
+  /// Mengambil daftar post dari API.
+  Future<List<Post>> getPosts() async {
+    final data = await _getJson('posts');
+    if (data is! List) {
+      throw const ApiException('Format daftar post tidak valid.');
+    }
+
+    return data.map((item) {
+      if (item is! Map<String, dynamic>) {
+        throw const ApiException('Format data post tidak valid.');
+      }
+      return Post.fromJson(item);
+    }).toList();
+  }
+  // read only - akhir
+
   Future<Object?> _getJson(String endpoint) async {
     final normalizedBaseUrl = _baseUrl.endsWith('/') ? _baseUrl : '$_baseUrl/';
     final uri = Uri.parse(normalizedBaseUrl).resolve(endpoint);
@@ -58,21 +76,40 @@ class ApiService {
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
         throw ApiException(
-          'Gagal memuat data pengguna (status ${response.statusCode}).',
+          'Gagal memuat data (status ${response.statusCode}).',
           statusCode: response.statusCode,
         );
       }
       return jsonDecode(response.body);
+    } on ApiException {
+      rethrow;
     } on TimeoutException {
       throw const ApiException(
         'Request timeout. Periksa koneksi internet Anda.',
+      );
+    } on HandshakeException {
+      throw const ApiException(
+        'Koneksi aman ke server gagal. Silakan coba lagi nanti.',
       );
     } on SocketException {
       throw const ApiException(
         'Tidak ada koneksi internet. Periksa jaringan Anda.',
       );
+    } on http.ClientException {
+      throw const ApiException(
+        'Tidak dapat menghubungi server. Silakan coba lagi nanti.',
+      );
     } on FormatException {
       throw const ApiException('Format data dari server tidak valid.');
+    } catch (error, stackTrace) {
+      developer.log(
+        'Unexpected API error (${error.runtimeType}).',
+        name: 'ApiService',
+        stackTrace: stackTrace,
+      );
+      throw const ApiException(
+        'Terjadi kesalahan saat menghubungi server. Silakan coba lagi nanti.',
+      );
     }
   }
 

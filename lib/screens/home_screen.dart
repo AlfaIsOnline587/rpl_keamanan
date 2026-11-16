@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../repositories/user_repository.dart';
+import 'post_list_screen.dart';
 import 'user_list_screen.dart';
+import 'validation_test_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.userRepository});
-
-  final UserRepository userRepository;
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +37,36 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) =>
-                          UserListScreen(userRepository: userRepository),
+                      builder: (_) => const UserListScreen(),
                     ),
                   );
                 },
                 icon: const Icon(Icons.people),
                 label: const Text('Lihat Pengguna'),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const PostListScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.article),
+                label: const Text('Lihat Daftar Post'),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const ValidationTestScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.fact_check),
+                label: const Text('Uji Validasi'),
               ),
             ],
           ),
